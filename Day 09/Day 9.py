@@ -6,27 +6,10 @@ def neighbors(i, j, a):
     :param a: input array
     :return: list of indices of a[i][j]'s neighbors
     """
-    if i == 0:
-        if j == 0:
-            return [(1, 0), (0, 1)]
-        elif j == len(a[i]) - 1:
-            return [(0, j - 1), (1, j)]
-        else:
-            return [(0, j - 1), (0, j + 1), (1, j)]
-    elif i == len(a) - 1:
-        if j == 0:
-            return [(i - 1, 0), (i, 1)]
-        elif j == len(a[i]) - 1:
-            return [(i - 1, j), (i, j - 1)]
-        else:
-            return [(i, j - 1), (i, j + 1), (i - 1, j)]
-    else:
-        if j == 0:
-            return [(i - 1, 0), (i + 1, 0), (i, 1)]
-        elif j == len(a[i]) - 1:
-            return [(i - 1, j), (i + 1, j), (i, j - 1)]
-        else:
-            return [(i - 1, j), (i + 1, j), (i, j - 1), (i, j + 1)]
+    r = len(a)
+    c = len(a[0])
+    v = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+    return [(i+dx, j+dy) for dx, dy in v if 0 <= i+dx < r and 0 <= j+dy < c]
 
 
 def part1():
@@ -43,7 +26,7 @@ def part1():
         for j in range(ncols):
             c = a[i][j]
             n = neighbors(i, j, a)
-            if len(list(filter(lambda x: a[x[0]][x[1]] > c, n))) == len(n):
+            if all(map(lambda x: a[x[0]][x[1]] > c, n)):
                 res += c + 1
     return res
 
@@ -99,7 +82,7 @@ def part2():
         for j in range(ncols):
             c = a[i][j]
             n = neighbors(i, j, a)
-            if len(list(filter(lambda x: a[x[0]][x[1]] > c, n))) == len(n):
+            if all(map(lambda x: a[x[0]][x[1]] > c, n)):
                 res.append((i, j))
     answers = []
     for i, x in enumerate(res):
