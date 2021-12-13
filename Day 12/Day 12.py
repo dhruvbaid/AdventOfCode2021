@@ -25,6 +25,14 @@ def findPaths(d):
 
 def isValid(p):
     count = 0
+    z = list(filter(lambda a: a >= 2,
+                    map(lambda a: p.count(a),
+                        filter(lambda a: a.islower(),
+                               list(set(p))))))
+    if len(z) > 1:
+        return False
+    return True
+    """
     for x in list(filter(lambda x: x.islower(), list(set(p)))):
         if p.count(x) >= 2:
             count += 1
@@ -32,8 +40,9 @@ def isValid(p):
             # print(p, " failed")
             return False
     return True
+    """
 
-
+"""
 def findPaths2(d):
     paths = [(['start'], [])]
     finalPaths = []
@@ -55,6 +64,37 @@ def findPaths2(d):
                         t2 = pv[1] + [n] if n.islower() else pv[1]
                         if isValid(tmp):
                             newPaths.append((tmp, t2))
+        # print(f"newPaths = {newPaths}")
+        paths = newPaths
+        # print(f"paths = {paths}")
+    # print(f"finalPaths = {finalPaths}")
+    return finalPaths
+"""
+
+
+def findPaths2(d):
+    paths = [(['start'], {z: 0 for z in d if z.islower()})]
+    finalPaths = []
+    while len(paths) != 0:
+        newPaths = []
+        for i, pv in enumerate(paths):
+            # print(pv[1])
+            p = pv[0]
+            next = d[p[-1]]
+            for n in next:
+                if n == 'end':
+                    tmp = p + [n]
+                    finalPaths.append(tmp)
+                    # print(f"finalPaths = {finalPaths}")
+                else:
+                    curDict = pv[1]
+                    if n != 'start':
+                        # print(f"tmp = {tmp}")
+                        t2 = {q: curDict[q] for q in curDict}
+                        if n.islower():
+                            t2[n] += 1
+                        if len(list(filter(lambda x: x >= 2, list(t2.values())))) <= 1:
+                            newPaths.append(([n], t2))
         # print(f"newPaths = {newPaths}")
         paths = newPaths
         # print(f"paths = {paths}")
@@ -107,5 +147,6 @@ def part2():
 
 
 if __name__ == "__main__":
+    print(f"Should be 4720, 147848")
     print(part1())
     print(part2())
